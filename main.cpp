@@ -2,10 +2,13 @@
 #include <fstream>
 #include <random>
 #include <ctime>
-// 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
 using namespace std;
 
 int joc[11][11],scor_total=0;
+
+unsigned int seed_testare = 123456;
+mt19937 rng(seed_testare);
 
 random_device rd;
 mt19937 gen(rd());
@@ -645,6 +648,13 @@ void regenerare(int matrice[11][11]) {
                 matrice[i][j] = dist(gen);
 }
 
+void regenerare_testare(int matrice[11][11]) {
+    for (int i = 0; i < 11; i++)
+        for (int j = 0; j < 11; j++)
+            if (matrice[i][j] == 0)
+                matrice[i][j] = dist(rng);
+}
+
 int gasire_punctaj_maxim(int matrice[11][11]) {
     int scor_temp = 0;
     clasificare_formatiuni();
@@ -806,9 +816,6 @@ int main() {
         time(&time_inceput);
 
         cout<<"Ati ales modul testare!\n";
-        // for (int i = 0; i < 11; i++)
-        //     for (int j = 0; j < 11; j++)
-        //         cin >> joc[i][j];
         afisare(joc_testare);
         int existaSwap = 1, nrCascade = 0;
 
@@ -818,7 +825,7 @@ int main() {
             if (nrNoduri != 0) {
                 scor_total += eliminatorul_detestare(joc_testare);
                 gravitas(joc_testare);
-                regenerare(joc_testare);
+                regenerare_testare(joc_testare);
                 nrCascade++;
             } else {
                 existaSwap = swap_testare(joc_testare);
@@ -844,7 +851,7 @@ int main() {
             afisare(joc_testare);
         }
 
-        ofstream fisier("rezultate.csv");
+        ofstream fisier("rezultate_testare.csv");
 
         if (!fisier.is_open()) {
             cerr << "Eroare la deschiderea fisierului!\n";
